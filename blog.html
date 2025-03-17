@@ -7,18 +7,101 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: linear-gradient(to right, #0073e6, #003366);
+            color: white;
+            text-align: center;
+            padding: 20px 10px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        header p {
+            font-size: 1.2em;
+            margin-top: 5px;
+        }
+        header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            border: 2px solid white;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        header a:hover {
+            background-color: white;
+            color: #0073e6;
+        }
+        section {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        h2 {
+            text-align: center;
+            color: #003366;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            background: white;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        ul li:hover {
+            transform: scale(1.03);
+            box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15);
+        }
+        ul li a {
+            text-decoration: none;
+            font-size: 1.2em;
+            color: #0073e6;
+            font-weight: bold;
+            display: block;
+            transition: 0.3s;
+        }
+        ul li a:hover {
+            color: #003366;
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #003366;
+            color: white;
+            margin-top: 40px;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1>Blog</h1>
-        <p>Read my latest articles on AI, Machine Learning, and Research.</p>
-        <p><a href="index.html">Curriculum Vitae</a></p>
+        <h1>Berardino Barile</h1>
+        <p style="text-align: center;">Explore insights on AI, Machine Learning, and Research.</p>
+        <a href="index.html">Curriculum Vitae</a>
     </header>
 
     <section id="blog-posts">
         <h2>Recent Posts</h2>
         <ul>
-            <li><a href="posts/article1.html">Understanding Causal Inference in Machine Learning</a></li>
+            <li><a href="Causality.html">Understanding Causal Inference in Machine Learning</a></li>
             <li><a href="posts/article2.html">Generative AI for Medical Imaging: Opportunities and Challenges</a></li>
             <li><a href="posts/article3.html">How Bayesian Inference Can Improve AI Decision Making</a></li>
         </ul>

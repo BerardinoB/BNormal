@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Causal Inference in Machine Learning</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        p { text-align: justify; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: linear-gradient(to right, #0073e6, #003366);
+            color: white;
+            text-align: center;
+            padding: 20px 10px;
+        }
+        header img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100px;
+        }
+        header h1 {
+            margin: 10px 0 0;
+            font-size: 2.5em;
+        }
+        section {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        h2 {
+            color: #003366;
+        }
+        p {
+            line-height: 1.6;
+            font-size: 1.1em;
+            color: #333;
+        }
+        .large-text {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #003366;
+            color: white;
+            margin-top: 40px;
+        }
+        a {
+            color: #0073e6;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            color: #003366;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="../Logo.png" alt="Logo">
+        <h1 style="font-size: 1.8em;">Understanding Causal Inference in Machine Learning</h1>
+    </header>
+
+    <section>
+        <p class="large-text">1. Introduction</p>
+        <p>Causality is a fundamental concept in both science and <strong>Artificial Intelligence (AI)</strong>, providing a structured way to understand and model the relationships between different variables in a system. Traditional machine learning models, despite their impressive success in pattern recognition and predictive tasks, fundamentally rely on <strong>statistical associations</strong> rather than <strong>causal relationships</strong>. This distinction is crucial because while correlations can be useful for prediction within an unchanged environment, they fail when faced with interventions, distributional shifts, or tasks that require reasoning beyond the training distribution.</p>
+        <img src="Causality_img.jpeg" alt="Causality Diagram" style="display: block; margin: 20px auto; max-width: 100%;">
+        <p>Machine learning models trained on large datasets often assume that the observed data is sampled from a static, <strong>independent, and identically distributed (<em>i.i.d.</em>) distribution</strong>. However, real-world data is rarely <em>i.i.d.</em>; instead, it is generated through complex processes that involve interactions between underlying causal mechanisms. In practice, machine learning systems deployed in dynamic environments frequently encounter shifts in data distributions, making models prone to failure when they are applied outside of the training domain. This is particularly evident in applications such as healthcare, autonomous driving, and financial modeling, where models must make reliable decisions under changing conditions.</p>
+        <p>A key limitation of traditional <strong>statistical learning</strong> approaches is their inability to generalize beyond the observed data distribution. When trained on large datasets, deep neural networks learn intricate mappings between input and output variables, often capturing high-dimensional correlations that work well within the given dataset but fail when tested on <strong>out-of-distribution samples</strong>. This lack of robustness arises because standard machine learning models do not explicitly learn the underlying causal mechanisms that govern data generation. As a result, even state-of-the-art models struggle with tasks that require understanding counterfactuals, reasoning under interventions, and transferring knowledge to new domains.</p>
+        <img src="OOD.png" alt="OOD" style="display: block; margin: 20px auto; max-width: 50%;">
+        <p>Causal reasoning, in contrast, aims to identify the true causal structure that explains the data, rather than merely capturing statistical dependencies. A causal model allows us to answer questions about interventions (<strong><em>What happens if we change variable X?</em></strong>) and counterfactuals (<strong><em>What would have happened if X had been different?</em></strong>). These capabilities are crucial for robust AI systems that need to operate in environments with shifting conditions and for applications that involve decision-making based on interventions rather than passive observation.</p>
+        <p>Integrating causal representation learning into machine learning provides several key advantages:</p>
+        <ul>
+            <li><strong>1. Robust Generalization:</strong> By learning the causal mechanisms rather than <strong>spurious correlations</strong>, models can better adapt to distribution shifts and unseen conditions.</li>
+            <li><strong>2. Interventional Understanding:</strong> Causal models enable reasoning about the effects of actions, which is critical in domains such as healthcare and policy-making.</li>
+            <li><strong>3. Counterfactual Reasoning:</strong> Beyond standard predictions, causal models can answer <strong><em>what-if</em></strong> questions, allowing for improved decision-making and interpretability.</li>
+            <li><strong>4. Transfer Learning and Adaptability:</strong> Causal representations facilitate knowledge transfer between related but different tasks by identifying reusable causal structures.</li>
+            <li><strong>5. Improved Interpretability:</strong> Unlike black-box neural networks, causal models provide more explainable and transparent reasoning processes, which is essential for trustworthy AI applications.</li>
+        </ul>
+        <!-- <p><strong>Interventional Understanding:</strong> Causal models enable reasoning about the effects of actions, which is critical in domains such as healthcare and policy-making.</p>
+        <p><strong>Counterfactual Reasoning:</strong> Beyond standard predictions, causal models can answer <strong><em>what-if</em></strong> questions, allowing for improved decision-making and interpretability.</p>
+        <p><strong>Transfer Learning and Adaptability:</strong> Causal representations facilitate knowledge transfer between related but different tasks by identifying reusable causal structures.</p>
+        <p><strong>Improved Interpretability:</strong> Unlike black-box neural networks, causal models provide more explainable and transparent reasoning processes, which is essential for trustworthy AI applications.</p> -->
+        <p>However, learning causal representations from raw data is a challenging problem. Unlike structured datasets used in traditional causal inference, most real-world data does not come with explicitly labeled causal relationships. Instead, causal variables are often latent and must be inferred from observed correlations, making causal discovery a difficult yet essential step. Moreover, integrating causal reasoning into deep learning architectures requires a shift from purely associative learning towards learning structured representations that align with the principles of causality.</p>
+        <p>In this blog post, we explore the field of causal representation learning, its fundamental principles, and its implications for machine learning. We will discuss how causal models differ from statistical models, how causal representations can be learned from data, and why incorporating causality into machine learning is essential for developing more robust, interpretable, and generalizable AI systems.</p>
+
+        <p class="large-text">2. Levels of Causal Modeling</p>
+        <p>Understanding causality requires considering different levels of modeling, each providing a different degree of insight and predictive capability. At the most fundamental level, physical systems can be described by mechanistic models, such as differential equations, that fully capture the underlying processes governing the evolution of variables over time. These models allow precise predictions, reasoning about interventions, and the ability to infer causal structures directly from physical principles. However, they often require domain expertise and are not always feasible to construct from observational data alone.</p>
+        <p>Moving one level up, <strong><em>Structural Causal Models (SCMs)</em></strong> provide an abstraction of mechanistic models by representing relationships between variables through a set of structural equations. These equations define how each variable depends on its causes, incorporating both deterministic mechanisms and independent noise terms. SCMs enable reasoning about interventions by modifying specific equations while keeping others unchanged, making them a powerful tool for understanding causality in data-driven settings.</p>
+        <p>Further abstraction leads to causal graphical models, which encode causal relationships using <strong><em>Directed Acyclic Graphs (DAGs)</em></strong>. These models specify the conditional independence structure of variables and allow for interventions and counterfactual reasoning, though they typically require additional assumptions to be fully identifiable from observational data. Unlike purely statistical models, causal graphical models explicitly distinguish between correlation and causation, enabling robust predictions under distribution shifts.</p>
+        <img src="DAG.png" alt="DAG" style="display: block; margin: 20px auto; max-width: 100%;">
+        <p>At the highest level of abstraction, statistical models describe relationships between variables purely through probabilistic dependencies, without explicitly modeling causal mechanisms. While these models can achieve high predictive accuracy under <em>i.i.d.</em> conditions, they fail to generalize when the underlying distribution changes or when reasoning about interventions is required. As a result, purely statistical approaches are insufficient for tasks that require causal understanding, such as policy evaluation, decision-making, and <strong>out-of-distribution generalization</strong>.</p>
+        <p>This hierarchy of causal modeling highlights the trade-offs between expressiveness, interpretability, and learnability. While mechanistic models provide the most detailed and accurate descriptions, they are often infeasible to construct purely from data. <strong>Causal graphical models and SCMs</strong> offer a balance between expressiveness and practicality, enabling causal reasoning with data-driven approaches. In contrast, statistical models, though powerful in pattern recognition, lack the ability to make robust predictions under interventions or domain shifts. Understanding these levels of causal modeling is crucial for developing AI systems that go beyond correlation-based learning to achieve deeper reasoning and generalization capabilities.</p>
+
+        <p class="large-text" style="font-size: 1.4em; text-align: left;">3. The Common Cause Principle</p>
+        <p>Let's start with a motivational example. Suppose Alice is searching online for a laptop rucksack (a backpack with a padded compartment for a laptop). The web shop’s recommendation system suggests that she should buy a laptop to go along with the rucksack. This seems odd because she probably already owns a laptop—otherwise, she wouldn’t be looking for the rucksack in the first place.</p>
+        <p>This situation highlights an important idea: correlation does not imply causation. The system has observed that people who buy laptop rucksacks often also buy laptops, but it has not properly accounted for the underlying cause—many users already own a laptop before searching for a rucksack.</p>
+        <p>The <strong>Common Cause Principle</strong> states that if two variables, <em>X</em> and <em>Y</em>, are statistically dependent, then there must exist a third variable, <em>Z</em>, that causally influences both of them. This variable <em>Z</em> explains the entire dependence between <em>X</em> and <em>Y</em>, meaning that once we control for <em>Z</em>, <em>X</em> and <em>Y</em> become statistically independent.</p>
+        <img src="Causal_graph.png" alt="Causal_graph" style="display: block; margin: 20px auto; max-width: 100%;">
+        <p>To illustrate, consider the relationship between the number of storks (<em>X</em>) and the human birth rate (<em>Y</em>). There are three possible causal explanations:</p>
+        
+        <ul>
+            <li><strong>Direct causation (<em>X → Y</em>)</strong>: If storks actually bring babies, then an increase in storks leads to an increase in the birth rate.</li>
+            <li><strong>Reverse causation (<em>X ← Y</em>)</strong>: If babies somehow attract storks, then the birth rate influences the number of storks.</li>
+            <li><strong>Common cause (<em>X ← Z → Y</em>)</strong>: If an external factor, such as economic development (<em>Z</em>), influences both the number of storks and the birth rate, then <em>Z</em> explains the observed correlation.</li>
+        </ul>
+        
+        <p>Without additional assumptions, we cannot distinguish these three cases using observational data. The class of observational distributions over <em>X</em> and <em>Y</em> that can be realized by these models is the same in all three cases. A causal model thus provides genuinely more information than a purely statistical one.</p>
+
+        <p class="large-text" style="font-size: 1.4em; text-align: left;">4. The Importance of Disentangled and Independent Causal Mechanisms</p>
+        <p>A fundamental principle of causal reasoning is the <strong><em>Independent Causal Mechanisms (ICM)</em></strong>, which states that the causal generative process of a system is composed of autonomous mechanisms that do not influence one another. This independence is crucial because it allows for <strong>modularity</strong>, meaning that changes to one causal mechanism (e.g., an intervention) do not require re-learning the entire system but only the affected module. In contrast, statistical learning models tend to entangle dependencies, making them fragile when faced with changes in data distributions.</p>
+        <img src="ICM_Principle.png" alt="ICM_Principle" style="display: block; margin: 20px auto; max-width: 50%;">
+        <p>To clarify the concept, let's take as an example a person's age and sex. Age is a continuous variable that naturally increases over time, while sex is a categorical trait determined at birth. These two variables are causally independent, meaning that the mechanism governing one does not influence the mechanism governing the other.</p>
+        <p>For instance, consider a medical database where both age and sex are recorded. If we were to intervene and artificially change a person's recorded age—perhaps lowering it in the system—this would have no effect on their biological sex. Likewise, if we were to modify the recorded sex, their actual age would remain unchanged. This independence reflects a fundamental property of the world: males and females exist across all ages, and the process of aging occurs regardless of whether someone is male or female.</p>
+        <p>This independence also implies that we can obtain a <strong>disentangled representation</strong> of these two variables. In other words, because we can manipulate one without altering the other, we can represent them separately in a way that preserves their true causal structure. If such disentanglement were not possible—if, for example, changing a person’s sex also altered their age—it would suggest an underlying dependency between the two, making it difficult to study or model them separately. However, because age and sex are governed by <strong>independent causal mechanisms</strong>, their representations remain distinct, allowing us to analyze them separately without introducing unintended confounding effects. This autonomy of mechanisms is a key aspect of the <strong>Independent Causal Mechanisms (ICM)</strong> principle, ensuring that different causal factors remain modular and unaffected by changes to one another.</p>
+        <p>Similarly, in economics, <strong>market trends, consumer behavior, inflation rates, and government policies</strong> all impact economic indicators like GDP or employment rates. If a learned representation entangles these factors—such that inflation rates and consumer demand are mixed into the same latent space—it becomes challenging to isolate the direct impact of inflation from shifts in consumer preferences. This makes causal reasoning about policy interventions difficult. For example, if a government implements <strong>a tax reduction policy</strong>, a disentangled representation would allow a model to predict how much of the economic change stems from taxation adjustments versus broader market fluctuations. Without disentanglement, the effect of tax policies could be conflated with external economic shocks, leading to misleading conclusions.</p>
+        <p>In practice, disentangled representations can be achieved through structured models such as <strong><em>structural equation models (SEMs)</em></strong>, <strong>variational autoencoders (VAEs) with disentanglement constraints</strong>, or <strong>self-supervised learning techniques</strong> that encourage factor separation. These models enforce a structured decomposition of causal factors, ensuring that learned representations align with the principle of independent causal mechanisms. By <strong>explicitly separating latent factors</strong>, disentangled representations provide a foundation for robust <strong>intervention modeling, counterfactual reasoning, and generalization to new environments</strong>.</p>
+        <p>Furthermore, the benefits of disentangled representations extend to decision-making in dynamic environments. In healthcare, a model trained to predict <strong>hospital readmission rates</strong> should separately encode variables such as <strong>patient comorbidities, hospital treatment protocols, and socioeconomic status</strong>. If these factors are entangled, policy decisions aimed at improving hospital care could be confounded by socioeconomic effects, leading to ineffective interventions. By contrast, a model with a disentangled structure would allow policymakers to <strong>simulate targeted interventions</strong>—for example, adjusting hospital staffing ratios while controlling for external socioeconomic factors.</p>
+        <p>Overall, the need for <strong>disentangled representations</strong> is fundamental for machine learning systems that aim to reason causally, adapt to new settings, and support decision-making under uncertainty. By structuring data such that independent causal mechanisms remain modular and interpretable, we move closer to AI systems that <strong>go beyond correlation-based learning</strong> and towards models that can <strong>generalize, intervene, and provide actionable insights in complex domains</strong> such as healthcare and economics.</p>
+        
+        <p class="large-text" style="font-size: 1.4em; text-align: left;">Conclusion</p>
+        <p>In this blog post, we have explored the importance of causal inference in machine learning and how it differs from traditional statistical approaches. We discussed the limitations of relying solely on correlations and the necessity of understanding causal relationships to build robust, generalizable, and interpretable AI systems. By integrating causal representation learning, we can achieve better generalization, interventional understanding, counterfactual reasoning, and transfer learning.</p>
+        <p>We also delved into different levels of causal modeling, from mechanistic models to structural causal models and causal graphical models, highlighting their respective strengths and trade-offs. The Common Cause Principle and the Independent Causal Mechanisms principle were introduced to emphasize the need for disentangled and independent causal mechanisms in causal reasoning.</p>
+        <p>Ultimately, incorporating causality into machine learning is essential for developing AI systems that can adapt to changing environments, make reliable decisions under uncertainty, and provide actionable insights across various domains such as healthcare, economics, and policy-making. As the field of causal representation learning continues to evolve, it holds the promise of advancing AI towards more robust and trustworthy applications.</p>
+        <ul>
+            <li><strong>Suggested Readings:</strong></li>
+            <li><a href="https://www.nature.com/articles/s41598-024-60348-4">Causal impact evaluation of occupational safety policies on firms’ default using machine learning uplift modelling</a></li>
+            <li><a href="https://arxiv.org/pdf/2407.00744">Disentangled Representations For Causal Cognition</a></li>
+            <li><a href="https://arxiv.org/pdf/2102.11107">Towards Causal Representation Learning</a></li>
+            <p><a href="blog.html">Back to Blog</a></p>
+        </ul>
+        
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Berardino Barile | All rights reserved</p>
+    </footer>
+</body>
+</html>
