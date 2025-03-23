@@ -4,99 +4,196 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Berardino Barile</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        .highlight-link {
-            color: #0073e6;
-            font-weight: bold;
-            display: block;
-            text-align: center;
-            margin-top: 20px;
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 20px;
+            padding: 0;
         }
-        .institution-img {
-            display: block;
-            margin: 0 auto;
+        .container {
             width: 80%;
-            max-width: 1000px;
+            margin: auto;
+            overflow: hidden;
+        }
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #005f73;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .hero img {
+            width: 40%;
+            border-radius: 10px;
+        }
+        .hero-text {
+            width: 55%;
+            text-align: justify;
+            padding-top: 0;
+        }
+        .hero h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .hero p {
+            font-size: 1.2em;
+        }
+        .black-text {
+            color: #e9d8a6;
+        }
+        .highlight-text {
+        color: #f4a261; /* Change this to any desired color */
+        font-weight: bold; /* Optional: Make it bold */
+        }
+        section {
+            background: white;
+            margin: 10px 140px; /* Add margin on the left and right side */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #005f73;
+            border-bottom: 2px solid #005f73;
+            padding-bottom: 5px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        a {
+            color: #0073e6;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .contact a {
+            margin-right: 15px;
+        }
+        footer {
+            background: #005f73;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Berardino Barile</h1>
-        <p style="text-align: center;">Research Scientist | Machine Learning & AI | Computer Vision | Causal Inference</p>
-        <p style="text-align: center;"><a href="blog.html">Follow my Blog</a></p>
-    </header>
-
-    <section id="about">
-        <h2>About Me</h2>
-        <p>I am a Senior Research Scientist with a double doctoral degree in Machine Learning and an M.Sc in Statistics. 
-        With a rich background spanning both the public and private sectors, I have served as a Consultant and Senior Research Scientist, 
-        contributing to a diverse range of projects. My expertise is evidenced by a multitude of peer-reviewed journal publications. 
-        Currently, I am deeply engaged in research areas such as ML for computer vision, Causal Inference, Causal ML, Statistical Methods, and Generative AI. 
-        I am driven by a perpetual curiosity, always seeking new opportunities to expand my knowledge and skills.</p>
-    </section>
-
-    <section id="education">
-        <h2>Education</h2>
-        <ul>
-            <li><strong>Double PhD in Computer Science</strong> - KU Leuven & Université Claude Bernard Lyon 1 (2019-2022)</li>
-            <!-- <p>Thesis: <a href="https://theses.eurasip.org/theses/944/machine-learning-methods-for-multiple-sclerosis/" target="_blank">
-            "Machine Learning Methods for Multiple Sclerosis Classification and Prediction Using MRI Brain Connectivity"</a></p> -->
-            <li><strong>Master's Degree in Statistics</strong> - La Sapienza University of Rome (2011-2013) | 110/110 with honors</li>
-            <li><strong>Bachelor's Degree in Statistics</strong> - La Sapienza University of Rome (2008-2011) | 110/110 with honors</li>
-        </ul>
-    </section>
-
-    <section id="experience">
+    <div class="container">
+        <div class="hero">
+            <img src="profile.png" alt="Berardino Barile">
+            <div class="hero-text">
+                <h1>Berardino Barile PhD</h1>
+                <p><strong class="black-text">About me:</strong> I am a Senior Research Scientist with a double doctoral degree in <span class="highlight-text">Machine Learning</span> and an M.Sc in <span class="highlight-text">Statistics</span>. With a rich background spanning both the public and private sectors, I have served as a Consultant and <span class="highlight-text">Senior Research Scientist</span>, contributing to a diverse range of projects. My expertise is evidenced by a multitude of peer-reviewed journal publications. Currently, I am deeply engaged in research areas such as ML for Computer Vision, <span class="highlight-text">Generative AI</span>, Causal Inference, Causal ML and Statistical Methods. I am driven by a perpetual curiosity, always seeking new opportunities to expand my knowledge and skills.</p>
+                <p style="text-align: center;" class="black-text"><strong>Research Scientist | Machine Learning & AI | Computer Vision | Causal Inference</strong></p>
+                <p style="text-align: center; margin-bottom: 5px;"><a href="blog.html" style="color: #fefae0; font-weight: bold;">Follow my Blog</a></p>
+                <p style="text-align: center; margin-top: 0px; margin-bottom: 0;"><img src="Logo.png" alt="Logo" style="width: 70px; height: 70px;"></p>
+            </div>
+        </div>
+    </div>
+        
+        <section id="education">
+            <h2>Education</h2>
+            <ul>
+                <li>
+                    <strong style="font-size: 1.2em; margin-left: 20px">Double PhD in Computer Science</strong> - KU Leuven & Université Claude Bernard Lyon 1 (2019-2022)
+                    <ul>
+                        <li style="font-size: 0.9em; margin-left: 20px"><em><strong>Thesis:</strong></em> <em>Machine Learning Methods for Multiple Sclerosis Classification and Prediction Using MRI Brain Connectivity</em></li>
+                        <li style="font-size: 0.9em; margin-left: 50px"> - Research focused on developing advanced machine learning models for medical imaging and neuroscience applications.</li>
+                        <li style="font-size: 0.9em; margin-left: 50px"> - Worked on Probabilistic Deep Learning, Bayesian Inference, and Causal ML.</li>
+                        <li style="font-size: 0.9em; margin-left: 50px"> - Collaborated with top researchers and contributed to multiple peer-reviewed publications.</li>
+                        </ul>
+                    </ul>
+                </li>
+                
+                <strong style="font-size: 1.2em; margin-left: 20px;">Master's Degree in Statistics</strong> - La Sapienza University of Rome (2011-2013)</li>
+                <ul>
+                    <li style="font-size: 0.95em; margin-left: 20px"><em><strong>Thesis:</strong></em> <em>Short and Long Structural Effects of the International Bank System: A Structural-VAR Approach</em></li>
+                    <li style="font-size: 1em; margin-left: 50px"> - Grade: 110/110 with honors</li>
+                </ul>
+                <strong style="font-size: 1.2em; margin-left: 20px"> Bachelor's Degree in Statistics</strong> - La Sapienza University of Rome (2008-2011)</li>
+                
+                <ul>
+                    <li style="font-size: 0.95em; margin-left: 20px"><em><strong>Thesis:</strong></em> <em>Purchase Power Parity (PPP) and Equilibrium Exchange Rate in the Financial Market</em></li>
+                    <li style="font-size: 1em; margin-left: 50px"> - Grade: 110/110 with honors</li>
+                </ul>
+            </ul>
+        </section>
+        
+        <section id="experience">
         <h2>Professional Experience</h2>
         <ul>
-            <li><strong>Research Scientist</strong> - McGill University & Mila AI Institute (2023 - Present)</li>
-            <p>Developed advanced deep learning models for computer vision and causal ML, focusing on longitudinal modeling and trajectory prediction, with applications in drug efficacy analysis.</p>
+            <li><em><strong style="font-size: 1.2em; margin-left: 20px;">Research Scientist</strong> - McGill University & Mila AI Institute (2023 - Present)</em></li>
+            <p style="margin-left: 50px; margin-right: 80px"> Developed advanced deep learning models for computer vision and causal ML, focusing on longitudinal modeling and trajectory prediction, with applications in drug efficacy analysis.</p>
 
-            <li><strong>Senior Data Scientist</strong> - Verti Spa, Milan (2022 - 2023)</li>
-            <p>Developed machine learning and statistical models for pricing optimization, churn prediction, and customer retention using regression analysis, gradient boosting, and neural networks. 
+            <li><em><strong style="font-size: 1.2em; margin-left: 20px;"> Senior Data Scientist</strong> - Verti Spa, Milan (2022 - 2023) </em></li>
+            <p style="margin-left: 50px; margin-right: 80px">Developed machine learning and statistical models for pricing optimization, churn prediction, and customer retention using regression analysis, gradient boosting, and neural networks. 
             Built automated ML pipelines with AWS SageMaker for scalable deployment and implemented constrained optimization models for risk assessment and profitability.</p>
 
-            <li><strong>Big Data Scientist</strong> - Isiway Srl, Rome (2017 - 2019)</li>
-            <p>Implemented ML solutions for big data consulting projects, including deep learning models for human trajectory prediction and customer behavior analysis. 
+            <li><em><strong style="font-size: 1.2em; margin-left: 20px;">Big Data Scientist</strong> - Isiway Srl, Rome (2017 - 2019)</em></li>
+            <p style="margin-left: 50px; margin-right: 80px">Implemented ML solutions for big data consulting projects, including deep learning models for human trajectory prediction and customer behavior analysis. 
             Developed NLP-based sentiment analysis using web scraping, word embeddings, and RNN/LSTM models for improved prediction accuracy.</p>
 
-            <li><strong>Data Analyst</strong> - Invitalia SpA, Rome (2014 - 2017)</li>
-            <p>Analyzed economic and financial indicators for investment risk assessment and portfolio management. 
+            <li><em><strong style="font-size: 1.2em; margin-left: 20px;">Data Analyst</strong> - Invitalia SpA, Rome (2014 - 2017)</em></li>
+            <p style="margin-left: 50px; margin-right: 80px">Analyzed economic and financial indicators for investment risk assessment and portfolio management. 
             Developed econometric models for public policy evaluation, applying survival analysis, clustering, and counterfactual simulation techniques.</p>
-            <p>Want to know more: <a href="https://BerardinoB.github.io/My-Website/CV_Berardino_Barile.pdf" download>Download my CV (PDF)</a></p>
+            <p><a href="https://BerardinoB.github.io/My-Website/CV_Berardino_Barile.pdf" download>Download my CV (PDF)</a></p>
         </ul>
     </section>
+        
+        <section id="skills">
+            <h2>Skills & Tools</h2>
+            <ul>
+                <li><em><strong style="font-size: 1.2em; margin-left: 20px;">Programming & Development:</strong> Python, R, Stata, Matlab, SQL, LaTeX, Bash, Java, GitHub.</em>
+                    <p style="margin-left: 50px; margin-right: 80px; margin-top: 8px;">Used for developing machine learning models, statistical analysis, and data processing in research and industry projects.</p>
+                </li>
+                <li><em><strong style="font-size: 1.2em; margin-left: 20px;">Machine Learning & AI:</strong> PyTorch, TensorFlow, scikit-learn, NumPy, Pandas, SciPy, CUDA.</em>
+                    <p style="margin-left: 50px; margin-right: 80px; margin-top: 8px;">Implemented deep learning models for computer vision, probabilistic modeling, and time-series forecasting.</p>
+                </li>
+                <li><em><strong style="font-size: 1.2em; margin-left: 20px;">Cloud & MLOps:</strong> AWS SageMaker, Docker, Linux. </em>
+                    <p style="margin-left: 50px; margin-right: 80px; margin-top: 8px;">Deployed ML pipelines for large-scale training, model serving, and workflow automation in cloud environments.</p>
+                </li>
+                <li><em><strong style="font-size: 1.2em; margin-left: 20px;">Mathematical & Statistical Methods:</strong> Bayesian Inference, Probabilistic Modeling, Causal Inference, Optimization.</em>
+                    <p style="margin-left: 50px; margin-right: 80px; margin-top: 8px;">Designed models for counterfactual analysis, risk evaluation, and decision-making in medical imaging and finance.</p>
+                </li>
+                <li><em><strong style="font-size: 1.2em; margin-left: 20px;">Computer Vision & AI:</strong> Deep Learning, Generative AI, Image Processing.</em>
+                    <p style="margin-left: 50px; margin-right: 80px; margin-top: 8px;">Developed generative models for medical imaging, trajectory prediction, and biomarker discovery.</p>
+                </li>
+            </ul>
+        </section>
 
-    <section id="skills">
-        <h2>Skills & Tools</h2>
-        <ul>
-            <li>Python, Matlab, Stata, R, SQL, AWS, Docker, PyTorch, TensorFlow, LaTeX, GitHub</li>
-            <li>Machine Learning, Deep Learning, Bayesian Inference, Probabilistic Modeling</li>
-            <li>Computer Vision, Generative AI, Causal Inference</li>
-        </ul>
-    </section>
 
-    <section id="publications">
-        <h2>Selected Publications</h2>
-        <img src="Institutions.png" alt="Institutions" class="institution-img">
-        <p><a href="publications.html" class="highlight-link">View Full Publication List</a></p>
-    </section>
-
-    <section id="contact">
-        <h2>Contact</h2>
-        <p>Email: <a href="mailto:berardino.barile@gmail.com">berardino.barile@gmail.com</a></p>
-        <p>
-            <a href="https://scholar.google.com/citations?user=odmpMGcAAAAJ&hl=en" target="_blank">Google Scholar</a> |
-            <a href="https://www.linkedin.com/in/berardino-barile/?locale=en_US" target="_blank">LinkedIn</a> |
-            <a href="https://github.com/BerardinoB?tab=repositories" target="_blank">GitHub</a>
-        </p>
-        <p><a href="https://BerardinoB.github.io/My-Website/CV_Berardino_Barile.pdf" download>Download my CV (PDF)</a></p>
-    </section>
-
+        <section id="publications">
+            <h2>Scientific Contributions</h2>
+            <div style="text-align: center;">
+                <img src="Institutions.png" alt="Institutions" class="institution-img" style="width: 50%; height: auto;">
+            </div></div>
+            <p style="text-align: center;"><a href="publications.html" class="highlight-link">View Full Publication List</a></p>
+        </section>
+        
+        <section id="contact" class="contact">
+            <h2>Contact</h2>
+            <p>Email: <a href="mailto:berardino.barile@gmail.com">berardino.barile@gmail.com</a></p>
+            <p>
+                <a href="https://scholar.google.com/citations?user=odmpMGcAAAAJ&hl=en" target="_blank"><i class="fa-brands fa-google-scholar"></i> Google Scholar</a> |
+                <a href="https://www.linkedin.com/in/berardino-barile/?locale=en_US" target="_blank"><i class="fa-brands fa-linkedin"></i> LinkedIn</a> |
+                <a href="https://github.com/BerardinoB?tab=repositories" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+            </p>
+        </section>
+    </div>
+    
     <footer>
         <p>&copy; 2025 Berardino Barile | All rights reserved</p>
     </footer>
