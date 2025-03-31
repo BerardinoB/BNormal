@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Trading Simulator</title>
+    <style>
+        :root {
+            --primary: #1e40af;
+            --secondary: #7dd3fc;
+            --accent: #60a5fa;
+            --background: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --gain: #22c55e;
+            --loss: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 8px;
+        }
+
+        .account-info {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .balance-box {
+            background-color: var(--card);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .balance-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .balance-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        /* Toggle simulation button */
+        .simulation-toggle {
+            margin: 1rem 0;
+            text-align: center;
+        }
+        .simulation-toggle .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            background-color: var(--accent);
+            color: white;
+            transition: background-color 0.2s;
+        }
+        .simulation-toggle .btn:hover {
+            background-color: #3b82f6;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 1.5rem;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-container {
+            background-color: var(--card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .stock-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stock-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .stock-symbol {
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        .stock-price {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .price-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .price-change {
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .positive {
+            color: var(--gain);
+        }
+
+        .negative {
+            color: var(--loss);
+        }
+
+        .chart {
+            flex-grow: 1;
+            position: relative;
+            margin-top: 1rem;
+            min-height: 250px;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .card {
+            background-color: var(--card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-buy {
+            background-color: var(--gain);
+            color: white;
+        }
+
+        .btn-buy:hover {
+            background-color: #15803d;
+        }
+
+        .btn-sell {
+            background-color: var(--loss);
+            color: white;
+        }
+
+        .btn-sell:hover {
+            background-color: #b91c1c;
+        }
+
+        .transaction-input {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .transaction-input label {
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        .transaction-input input {
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background-color: var(--background);
+        }
+
+        .portfolio-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .portfolio-item:last-child {
+            border-bottom: none;
+        }
+
+        .position-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .position-label {
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        .position-value {
+            font-weight: 600;
+        }
+
+        .statistics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-box {
+            background-color: var(--background);
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .stat-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.875rem;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-action {
+            font-weight: 600;
+        }
+
+        .history-buy {
+            color: var(--gain);
+        }
+
+        .history-sell {
+            color: var(--loss);
+        }
+
+        .history-details {
+            color: var(--muted);
+        }
+
+        .time-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .time-btn {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+            background-color: var(--background);
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .time-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .arrow-up::before {
+            content: "↑ ";
+        }
+
+        .arrow-down::before {
+            content: "↓ ";
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">T</div>
+            <span>TradeSim</span>
+        </div>
+        <div class="account-info">
+            <div class="balance-box">
+                <div class="balance-label">Cash Balance</div>
+                <div class="balance-value" id="cash-balance">$10,000.00</div>
+            </div>
+            <div class="balance-box">
+                <div class="balance-label">Portfolio Value</div>
+                <div class="balance-value" id="portfolio-value">$0.00</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="simulation-toggle">
+        <button id="toggle-simulation-btn" class="btn">Stop Simulation</button>
+    </div>
+
+    <div class="main-container">
+        <div class="chart-container">
+            <div class="chart-header">
+                <div class="stock-info">
+                    <div class="stock-name">SimCorp</div>
+                    <div class="stock-symbol">SIM</div>
+                </div>
+                <div class="stock-price">
+                    <div class="price-value" id="current-price">$100.00</div>
+                    <div class="price-change" id="price-change">
+                        <span class="arrow-up positive">+0.00%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="time-controls">
+                <button class="time-btn active" data-speed="1">1x</button>
+                <button class="time-btn" data-speed="2">2x</button>
+                <button class="time-btn" data-speed="5">5x</button>
+                <button class="time-btn" data-speed="10">10x</button>
+            </div>
+            <div class="chart" id="price-chart">
+                <canvas id="chart-canvas"></canvas>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <div class="card">
+                <div class="card-title">Trade</div>
+                <div class="transaction-input">
+                    <label for="shares-input">Number of Shares</label>
+                    <input type="number" id="shares-input" min="1" value="1">
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-buy" id="buy-btn">Buy</button>
+                    <button class="btn btn-sell" id="sell-btn">Sell</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Portfolio</div>
+                <div class="portfolio-item">
+                    <div class="position-info">
+                        <div class="position-label">SimCorp (SIM)</div>
+                        <div class="position-value" id="shares-owned">0 shares</div>
+                    </div>
+                    <div class="position-info">
+                        <div class="position-label">Position Value</div>
+                        <div class="position-value" id="position-value">$0.00</div>
+                    </div>
+                </div>
+                <div class="statistics">
+                    <div class="stat-box">
+                        <div class="stat-label">Avg Entry Price</div>
+                        <div class="stat-value" id="avg-buy-price">$0.00</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Profit/Loss</div>
+                        <div class="stat-value" id="profit-loss">$0.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Trading History</div>
+                <div id="history-container">
+                    <!-- Trading history will be populated here -->
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Price Statistics</div>
+                <table id="stats-table" style="width:100%; border-collapse:collapse;">
+                    <tr>
+                        <th style="text-align:left; padding:0.5rem; border-bottom:1px solid #e2e8f0;">Metric</th>
+                        <th style="text-align:left; padding:0.5rem; border-bottom:1px solid #e2e8f0;">Value</th>
+                    </tr>
+                    <tr>
+                        <td style="padding:0.5rem;">Minimum Price</td>
+                        <td style="padding:0.5rem;" id="min-price">$0.00</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0.5rem;">Maximum Price</td>
+                        <td style="padding:0.5rem;" id="max-price">$0.00</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0.5rem;">Average Price</td>
+                        <td style="padding:0.5rem;" id="avg-price">$0.00</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0.5rem;">Current Price</td>
+                        <td style="padding:0.5rem;" id="current-price-stat">$0.00</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        const state = {
+            cash: 10000,
+            shares: 0, // positive means long, negative means short
+            avgBuyPrice: 0,
+            currentPrice: 100,
+            initialPrice: 100,
+            priceHistory: [],
+            transactionHistory: [],
+            simulationSpeed: 1
+        };
+        let simulationRunning = true;
+
+        // DOM elements
+        const cashBalanceEl = document.getElementById('cash-balance');
+        const portfolioValueEl = document.getElementById('portfolio-value');
+        const currentPriceEl = document.getElementById('current-price');
+        const priceChangeEl = document.getElementById('price-change');
+        const sharesInputEl = document.getElementById('shares-input');
+        const buyBtnEl = document.getElementById('buy-btn');
+        const sellBtnEl = document.getElementById('sell-btn');
+        const sharesOwnedEl = document.getElementById('shares-owned');
+        const positionValueEl = document.getElementById('position-value');
+        const avgBuyPriceEl = document.getElementById('avg-buy-price');
+        const profitLossEl = document.getElementById('profit-loss');
+        const historyContainerEl = document.getElementById('history-container');
+        const canvas = document.getElementById('chart-canvas');
+        const speedBtns = document.querySelectorAll('.time-btn');
+        const toggleSimulationBtn = document.getElementById('toggle-simulation-btn');
+
+        // Canvas setup
+        const ctx = canvas.getContext('2d');
+        let canvasWidth, canvasHeight;
+        function resizeCanvas() {
+            canvasWidth = canvas.parentElement.offsetWidth;
+            canvasHeight = canvas.parentElement.offsetHeight;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Format currency
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            }).format(value);
+        }
+
+        // Format percentage
+        function formatPercentage(value) {
+            return (value >= 0 ? '+' : '') + value.toFixed(2) + '%';
+        }
+
+        // Update UI
+        function updateUI() {
+            // Update account info
+            cashBalanceEl.textContent = formatCurrency(state.cash);
+            // Portfolio value = current value of position (can be negative for shorts)
+            const positionValue = state.shares * state.currentPrice;
+            portfolioValueEl.textContent = formatCurrency(positionValue);
+            
+            // Update stock price
+            currentPriceEl.textContent = formatCurrency(state.currentPrice);
+            
+            // Calculate price change percentage
+            const priceChange = ((state.currentPrice - state.initialPrice) / state.initialPrice) * 100;
+            priceChangeEl.innerHTML = `<span class="${priceChange >= 0 ? 'arrow-up positive' : 'arrow-down negative'}">${formatPercentage(priceChange)}</span>`;
+            
+            // Update portfolio shares
+            sharesOwnedEl.textContent = `${state.shares} shares`;
+            
+            // Update profit/loss; for long: (current - avg)*shares, for short: (avg - current)*abs(shares)
+            const profitLoss = state.shares * (state.currentPrice - state.avgBuyPrice);
+            profitLossEl.textContent = formatCurrency(profitLoss);
+            profitLossEl.className = `stat-value ${profitLoss >= 0 ? 'positive' : 'negative'}`;
+            
+            // Update average price display
+            avgBuyPriceEl.textContent = formatCurrency(state.avgBuyPrice);
+            // Update position value
+            positionValueEl.textContent = formatCurrency(positionValue);
+
+            // Update price statistics
+            updateStats();
+        }
+
+        // Generate random price
+        function generatePrice() {
+            const changePercent = (Math.random() - 0.5) * 2; // -1% to 1%
+            const newPrice = state.currentPrice * (1 + changePercent / 100);
+            state.currentPrice = Math.max(1, newPrice);
+            state.priceHistory.push({
+                price: state.currentPrice,
+                time: Date.now()
+            });
+            if (state.priceHistory.length > 100) {
+                state.priceHistory.shift();
+            }
+            updateUI();
+            drawChart();
+        }
+
+        // Draw price chart
+        function drawChart() {
+            if (state.priceHistory.length < 2) return;
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            let minPrice = Math.min(...state.priceHistory.map(p => p.price));
+            let maxPrice = Math.max(...state.priceHistory.map(p => p.price));
+            const padding = (maxPrice - minPrice) * 0.1;
+            minPrice -= padding;
+            maxPrice += padding;
+            const points = state.priceHistory.map((point, index) => {
+                const x = (index / (state.priceHistory.length - 1)) * canvasWidth;
+                const y = canvasHeight - ((point.price - minPrice) / (maxPrice - minPrice)) * canvasHeight;
+                return { x, y };
+            });
+            ctx.strokeStyle = '#60a5fa';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            points.forEach((point, index) => {
+                if (index === 0) {
+                    ctx.moveTo(point.x, point.y);
+                } else {
+                    ctx.lineTo(point.x, point.y);
+                }
+            });
+            ctx.stroke();
+            ctx.fillStyle = 'rgba(96, 165, 250, 0.2)';
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, canvasHeight);
+            points.forEach(point => ctx.lineTo(point.x, point.y));
+            ctx.lineTo(points[points.length - 1].x, canvasHeight);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Mark transaction points
+            state.transactionHistory.forEach(transaction => {
+                const transactionTime = new Date(transaction.time).getTime();
+                const closestPoint = state.priceHistory.reduce((prev, curr) => {
+                    return Math.abs(curr.time - transactionTime) < Math.abs(prev.time - transactionTime) ? curr : prev;
+                });
+                const pointIndex = state.priceHistory.indexOf(closestPoint);
+                if (pointIndex >= 0) {
+                    const point = points[pointIndex];
+                    ctx.fillStyle = transaction.type === 'buy' ? '#22c55e' : '#ef4444';
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+        }
+
+        // Buy shares (handles covering shorts)
+        function buyShares() {
+            const sharesToBuy = parseInt(sharesInputEl.value);
+            if (isNaN(sharesToBuy) || sharesToBuy <= 0) {
+                alert('Please enter a valid number of shares');
+                return;
+            }
+            const cost = sharesToBuy * state.currentPrice;
+            state.cash -= cost;
+            let newShares, newAvg;
+            if (state.shares >= 0) {
+                // Increasing a long position
+                newShares = state.shares + sharesToBuy;
+                newAvg = (state.avgBuyPrice * state.shares + state.currentPrice * sharesToBuy) / newShares;
+            } else {
+                // Covering short position
+                if (sharesToBuy <= Math.abs(state.shares)) {
+                    newShares = state.shares + sharesToBuy; // still short or flat
+                    newAvg = state.avgBuyPrice; // avg remains for the remaining short position
+                    if (newShares === 0) {
+                        newAvg = 0;
+                    }
+                } else {
+                    // Covers entire short and begins a long position with remainder
+                    const remainder = sharesToBuy - Math.abs(state.shares);
+                    newShares = remainder;
+                    newAvg = state.currentPrice;
+                }
+            }
+            state.shares = newShares;
+            state.avgBuyPrice = newAvg;
+            
+            // Record transaction
+            const transaction = {
+                type: 'buy',
+                shares: sharesToBuy,
+                price: state.currentPrice,
+                total: cost,
+                time: new Date().toLocaleTimeString()
+            };
+            state.transactionHistory.unshift(transaction);
+            updateTransactionHistory();
+            updateUI();
+        }
+
+        // Sell shares (allows short-selling)
+        function sellShares() {
+            const sharesToSell = parseInt(sharesInputEl.value);
+            if (isNaN(sharesToSell) || sharesToSell <= 0) {
+                alert('Please enter a valid number of shares');
+                return;
+            }
+            const revenue = sharesToSell * state.currentPrice;
+            state.cash += revenue;
+            let newShares, newAvg;
+            if (state.shares > 0) {
+                // Currently in a long position
+                if (sharesToSell < state.shares) {
+                    newShares = state.shares - sharesToSell;
+                    newAvg = state.avgBuyPrice;
+                } else if (sharesToSell === state.shares) {
+                    newShares = 0;
+                    newAvg = 0;
+                } else {
+                    // Selling more than owned: liquidate long and open a short position with the remainder
+                    const remainder = sharesToSell - state.shares;
+                    newShares = -remainder;
+                    newAvg = state.currentPrice;
+                }
+            } else {
+                // Already short or flat: increasing the short position
+                newShares = state.shares - sharesToSell;
+                // Update average short entry price using weighted average
+                newAvg = ((Math.abs(state.shares) * state.avgBuyPrice) + (sharesToSell * state.currentPrice)) / Math.abs(newShares);
+            }
+            state.shares = newShares;
+            state.avgBuyPrice = newAvg;
+            
+            // Record sell transaction
+            const transaction = {
+                type: 'sell',
+                shares: sharesToSell,
+                price: state.currentPrice,
+                total: revenue,
+                time: new Date().toLocaleTimeString()
+            };
+            state.transactionHistory.unshift(transaction);
+            updateTransactionHistory();
+            updateUI();
+        }
+
+        // Update transaction history
+        function updateTransactionHistory() {
+            let historyHTML = '';
+            state.transactionHistory.forEach(transaction => {
+                historyHTML += `<div class="history-item">
+                    <div class="history-action ${transaction.type === 'buy' ? 'history-buy' : 'history-sell'}">
+                        ${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}
+                    </div>
+                    <div class="history-details">
+                        ${transaction.shares} shares @ ${formatCurrency(transaction.price)} (${transaction.time})
+                    </div>
+                </div>`;
+            });
+            historyContainerEl.innerHTML = historyHTML;
+        }
+
+        // Update statistics
+        function updateStats() {
+            const prices = state.priceHistory.map(p => p.price);
+            const min = prices.length ? Math.min(...prices) : state.currentPrice;
+            const max = prices.length ? Math.max(...prices) : state.currentPrice;
+            const avg = prices.length ? (prices.reduce((sum, price) => sum + price, 0) / prices.length) : state.currentPrice;
+            
+            document.getElementById('min-price').textContent = formatCurrency(min);
+            document.getElementById('max-price').textContent = formatCurrency(max);
+            document.getElementById('avg-price').textContent = formatCurrency(avg);
+            document.getElementById('current-price-stat').textContent = formatCurrency(state.currentPrice);
+        }
+
+        buyBtnEl.addEventListener('click', buyShares);
+        sellBtnEl.addEventListener('click', sellShares);
+
+        // Add simulation toggle functionality
+        toggleSimulationBtn.addEventListener('click', function() {
+            simulationRunning = !simulationRunning;
+            toggleSimulationBtn.textContent = simulationRunning ? 'Stop Simulation' : 'Resume Simulation';
+        });
+
+        // Add speed control functionality
+        speedBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove the active class from all buttons
+                speedBtns.forEach(b => b.classList.remove('active'));
+                // Add active class to the clicked button
+                this.classList.add('active');
+                // Update the simulation speed
+                state.simulationSpeed = parseInt(this.dataset.speed);
+            });
+        });
+
+        function simulationLoop() {
+            if (simulationRunning) {
+            generatePrice();
+            }
+            setTimeout(simulationLoop, 1000 / state.simulationSpeed);
+        }
+        simulationLoop();
+    </script>
+</body>
+</html>
