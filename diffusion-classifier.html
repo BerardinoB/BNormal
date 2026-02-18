@@ -1,221 +1,230 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Diffusion Model is Secretly a Zero-Shot Classifier</title>
-    <link rel="stylesheet" href="../style.css">
-    <link rel="icon" type="image/x-icon" href="../favicon.ico">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <style>
-        p { text-align: justify; }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background: linear-gradient(to right, #0073e6, #003366);
-            color: white;
-            text-align: center;
-            padding: 20px 10px;
-        }
-        header img {
-            display: block;
-            margin: 0 auto;
-            max-width: 100px;
-        }
-        header h1 {
-            margin: 10px 0 0;
-            font-size: 2.5em;
-        }
-        section {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            background: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-        h2 {
-            color: #003366;
-        }
-        p {
-            line-height: 1.6;
-            font-size: 1.1em;
-            color: #333;
-        }
-        .large-text {
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-        footer {
-            text-align: center;
-            padding: 15px;
-            background: #003366;
-            color: white;
-            margin-top: 40px;
-        }
-        a {
-            color: #0073e6;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        a:hover {
-            color: #003366;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <img src="Logo.png" alt="Logo">
-        <h1 style="font-size: 1.8em;">Your Diffusion Model is Secretly a Zero-Shot Classifier</h1>
-    </header>
-
-    <section>
-        <p class="large-text">1. Introduction</p>
-        <p>
-            Diffusion models are usually introduced as image generators: you give a text prompt,
-            and the model synthesizes a new image. The paper
-            <em>Your Diffusion Model is Secretly a Zero-Shot Classifier</em> shows a less obvious but
-            powerful fact: the same model can also be used for recognition.
-            In other words, a text-to-image diffusion model can classify images without training
-            a separate classifier head for each task.
-        </p>
-        <p>
-            This is important because it blurs the line between generative and discriminative AI.
-            Instead of learning a direct mapping from image to class label, we ask:
-            <strong>which class description makes this observed image most plausible under the model?</strong>
-            That shift in viewpoint opens the door to stronger compositional reasoning and, in
-            several settings, improved behavior under distribution shift.
-        </p>
-
-        <p class="large-text">2. Core Idea in One Sentence</p>
-        <p>
-            For each candidate class prompt, run the diffusion model as a conditional density estimator,
-            score how well it explains the input image, and pick the class with the best score.
-        </p>
-
-        <p class="large-text">3. How Diffusion Classifier Works</p>
-        <p>
-            The method in the paper, often referred to as <strong>Diffusion Classifier</strong>,
-            uses a pre-trained text-to-image diffusion model (e.g., Stable Diffusion) and turns
-            it into a zero-shot classifier through scoring.
-        </p>
-        <ul>
-            <li>Define class prompts (e.g., "a photo of a golden retriever").</li>
-            <li>Take an input image <em>x</em>.</li>
-            <li>For each class prompt <em>c</em>, estimate a diffusion-based loss or energy indicating how compatible <em>x</em> is with <em>c</em>.</li>
-            <li>Convert per-class energies into probabilities (typically softmax over negative losses).</li>
-            <li>Predict the class with the highest probability.</li>
-        </ul>
-
-        <p>
-            <strong>Intuition:</strong> lower diffusion reconstruction/noise-prediction error under a class prompt means
-            the model believes that prompt better explains the observed image.
-        </p>
-
-        <p>
-            In practice, reliable scoring requires averaging over multiple noise samples and timesteps.
-            Prompt design also matters: prompt templates can significantly affect final accuracy.
-        </p>
-
-        <p class="large-text">4. Why This Is Different From CLIP-Style Zero-Shot</p>
-        <p>
-            CLIP-like methods compare embeddings from image and text encoders in a shared space.
-            Diffusion Classifier instead uses a <em>generative compatibility score</em>. This can capture
-            nuanced multimodal relationships and often helps with compositional concepts where plain
-            embedding similarity can be brittle.
-        </p>
-        <p>
-            The trade-off is compute: diffusion-based inference is heavier than one-pass discriminative
-            scoring, so latency and cost are key practical considerations.
-        </p>
-
-        <p class="large-text">5. Main Findings Reported in the Paper</p>
-        <ul>
-            <li>Strong zero-shot classification performance using only pre-trained diffusion models.</li>
-            <li>Outperforms alternative methods that extract classifiers from diffusion models in several benchmarks.</li>
-            <li>Still a gap versus best discriminative systems on some tasks.</li>
-            <li>Notably stronger compositional reasoning in challenging multimodal settings.</li>
-            <li>Promising effective robustness trends under distribution shift.</li>
-        </ul>
-
-        <p class="large-text">6. Robustness and Distribution Shift</p>
-        <p>
-            One of the interesting claims is that generative scoring can remain useful when test data
-            deviates from the training distribution. The paper reports improved effective robustness in
-            some settings compared with extracted discriminative baselines.
-        </p>
-        <p>
-            This should not be read as "diffusion always wins." Instead, it suggests that generative
-            modeling provides a different bias that can be advantageous in certain shift regimes,
-            especially when semantics and composition matter.
-        </p>
-
-        <p class="large-text">7. Strengths</p>
-        <ul>
-            <li><strong>No additional task-specific training</strong> required for many zero-shot setups.</li>
-            <li><strong>Better compositionality</strong> than several competing extraction methods.</li>
-            <li><strong>Unified model usage</strong>: one backbone for generation and recognition.</li>
-            <li><strong>Conceptual clarity</strong>: classify by explaining the data, not only matching embeddings.</li>
-        </ul>
-
-        <p class="large-text">8. Limitations and Practical Frictions</p>
-        <ul>
-            <li><strong>Inference cost</strong>: much heavier than standard discriminative classifiers.</li>
-            <li><strong>Prompt sensitivity</strong>: wording and template choices can move results significantly.</li>
-            <li><strong>Calibration challenges</strong>: score scales and confidence interpretation need care.</li>
-            <li><strong>Throughput constraints</strong>: difficult for strict real-time production pipelines without optimization.</li>
-        </ul>
-
-        <p class="large-text">9. Practical Guidance</p>
-        <p><strong>Use this approach when:</strong></p>
-        <ul>
-            <li>You need zero-shot recognition over changing class vocabularies.</li>
-            <li>Compositional reasoning is more important than raw low-latency throughput.</li>
-            <li>You want a unified generative framework for both synthesis and understanding.</li>
-        </ul>
-        <p><strong>Be cautious when:</strong></p>
-        <ul>
-            <li>Latency and inference budget are strict.</li>
-            <li>You need highly stable, prompt-insensitive deployment at scale.</li>
-        </ul>
-
-        <p class="large-text">10. Broader Perspective</p>
-        <p>
-            This paper contributes to a bigger trend: generative models are not just content creators,
-            they are increasingly becoming general-purpose world models. If a model can assign meaningful
-            compatibility scores to image-text pairs, it can support downstream tasks beyond generation,
-            including classification, retrieval, and eventually more structured reasoning.
-        </p>
-
-        <p class="large-text">Conclusion</p>
-        <p>
-            <em>Your Diffusion Model is Secretly a Zero-Shot Classifier</em> is an elegant demonstration
-            that a pre-trained diffusion model already contains useful recognition capabilities.
-            The method is not a universal replacement for discriminative classifiers, but it offers a
-            compelling alternative when compositionality and open-ended semantics are central.
-            For researchers and practitioners, the key message is simple:
-            <strong>do not underestimate what generative models already know.</strong>
-        </p>
-
-        <strong>Suggested Readings:</strong>
-        <ul>
-            <li><a href="https://arxiv.org/abs/2303.16203">Your Diffusion Model is Secretly a Zero-Shot Classifier (arXiv)</a></li>
-            <br>
-            <li><a href="https://diffusion-classifier.github.io/">Project Page: Diffusion Classifier</a></li>
-            <br>
-            <li><a href="https://arxiv.org/abs/2103.00020">CLIP: Learning Transferable Visual Models From Natural Language Supervision</a></li>
-            <br>
-        </ul>
-
-        <p><a href="blog.html">Back to Blog</a></p>
-    </section>
-
-    <footer>
-        <p>&copy; 2025 Berardino Barile | All rights reserved</p>
-    </footer>
-</body>
-</html>
+ ```html                                                                                                                                                                                                    
+   <!DOCTYPE html>                                                                                                                                                                                          
+   <html lang="en">                                                                                                                                                                                         
+   <head>                                                                                                                                                                                                   
+   <meta charset="UTF-8" />                                                                                                                                                                                 
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />                                                                                                                                 
+   <title>Your Diffusion Model is Secretly a Zero-Shot Classifier</title>                                                                                                                                   
+   <link rel="stylesheet" href="../style.css" />                                                                                                                                                            
+   <link rel="icon" type="image/x-icon" href="../favicon.ico" />                                                                                                                                            
+   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>                                                                                                                
+   <style>                                                                                                                                                                                                  
+   p { text-align: justify; }                                                                                                                                                                               
+   body {                                                                                                                                                                                                   
+   font-family: Arial, sans-serif;                                                                                                                                                                          
+   background-color: #f4f4f4;                                                                                                                                                                               
+   margin: 0;                                                                                                                                                                                               
+   padding: 0;                                                                                                                                                                                              
+   }                                                                                                                                                                                                        
+   header {                                                                                                                                                                                                 
+   background: linear-gradient(to right, #0073e6, #003366);                                                                                                                                                 
+   color: white;                                                                                                                                                                                            
+   text-align: center;                                                                                                                                                                                      
+   padding: 20px 10px;                                                                                                                                                                                      
+   }                                                                                                                                                                                                        
+   header h1 {                                                                                                                                                                                              
+   margin: 10px 0 0;                                                                                                                                                                                        
+   font-size: 1.9em;                                                                                                                                                                                        
+   }                                                                                                                                                                                                        
+   section {                                                                                                                                                                                                
+   max-width: 850px;                                                                                                                                                                                        
+   margin: 40px auto;                                                                                                                                                                                       
+   padding: 24px;                                                                                                                                                                                           
+   background: white;                                                                                                                                                                                       
+   box-shadow: 0 0 10px rgba(0,0,0,0.1);                                                                                                                                                                    
+   border-radius: 10px;                                                                                                                                                                                     
+   }                                                                                                                                                                                                        
+   h2 { color: #003366; }                                                                                                                                                                                   
+   p {                                                                                                                                                                                                      
+   line-height: 1.7;                                                                                                                                                                                        
+   font-size: 1.08em;                                                                                                                                                                                       
+   color: #333;                                                                                                                                                                                             
+   }                                                                                                                                                                                                        
+   .large-text {                                                                                                                                                                                            
+   font-size: 1.45em;                                                                                                                                                                                       
+   font-weight: bold;                                                                                                                                                                                       
+   color: #0b2f57;                                                                                                                                                                                          
+   margin-top: 8px;                                                                                                                                                                                         
+   }                                                                                                                                                                                                        
+   ul li { margin-bottom: 10px; }                                                                                                                                                                           
+   .math-note {                                                                                                                                                                                             
+   background: #f7fbff;                                                                                                                                                                                     
+   border-left: 4px solid #0073e6;                                                                                                                                                                          
+   padding: 12px 14px;                                                                                                                                                                                      
+   margin: 14px 0;                                                                                                                                                                                          
+   border-radius: 6px;                                                                                                                                                                                      
+   color: #1f3a56;                                                                                                                                                                                          
+   }                                                                                                                                                                                                        
+   .takeaway {                                                                                                                                                                                              
+   background: #f8f8ff;                                                                                                                                                                                     
+   border: 1px solid #d9e8ff;                                                                                                                                                                               
+   border-radius: 8px;                                                                                                                                                                                      
+   padding: 12px 14px;                                                                                                                                                                                      
+   margin: 18px 0;                                                                                                                                                                                          
+   }                                                                                                                                                                                                        
+   footer {                                                                                                                                                                                                 
+   text-align: center;                                                                                                                                                                                      
+   padding: 15px;                                                                                                                                                                                           
+   background: #003366;                                                                                                                                                                                     
+   color: white;                                                                                                                                                                                            
+   margin-top: 40px;                                                                                                                                                                                        
+   }                                                                                                                                                                                                        
+   a {                                                                                                                                                                                                      
+   color: #0073e6;                                                                                                                                                                                          
+   text-decoration: none;                                                                                                                                                                                   
+   font-weight: bold;                                                                                                                                                                                       
+   }                                                                                                                                                                                                        
+   a:hover { color: #003366; }                                                                                                                                                                              
+   </style>                                                                                                                                                                                                 
+   </head>                                                                                                                                                                                                  
+   <body>                                                                                                                                                                                                   
+   <header>                                                                                                                                                                                                 
+   <h1>Your Diffusion Model is Secretly a Zero-Shot Classifier</h1>                                                                                                                                         
+   </header>                                                                                                                                                                                                
+                                                                                                                                                                                                            
+   <section>                                                                                                                                                                                                
+   <p class="large-text">1. Introduction</p>                                                                                                                                                                
+   <p>                                                                                                                                                                                                      
+   Diffusion models are usually introduced as image generators: you give a text prompt,                                                                                                                     
+   and the model synthesizes a new image. The paper                                                                                                                                                         
+   <em>Your Diffusion Model is Secretly a Zero-Shot Classifier</em> shows a less obvious but                                                                                                                
+   powerful fact: the same model can also be used for recognition.                                                                                                                                          
+   In other words, a text-to-image diffusion model can classify images without training                                                                                                                     
+   a separate classifier head for each task.                                                                                                                                                                
+   </p>                                                                                                                                                                                                     
+   <p>                                                                                                                                                                                                      
+   This is important because it blurs the line between generative and discriminative AI.                                                                                                                    
+   Instead of learning a direct mapping from image to class label, we ask:                                                                                                                                  
+   <strong>which class description makes this observed image most plausible under the model?</strong>                                                                                                       
+   That shift in viewpoint opens the door to stronger compositional reasoning and, in                                                                                                                       
+   several settings, improved behavior under distribution shift.                                                                                                                                            
+   </p>                                                                                                                                                                                                     
+                                                                                                                                                                                                            
+   <p class="large-text">2. Core Idea in One Sentence</p>                                                                                                                                                   
+   <p>                                                                                                                                                                                                      
+   For each candidate class prompt, run the diffusion model as a conditional density estimator,                                                                                                             
+   score how well it explains the input image, and pick the class with the best score.                                                                                                                      
+   </p>                                                                                                                                                                                                     
+                                                                                                                                                                                                            
+   <p class="large-text">3. How Diffusion Classifier Works</p>                                                                                                                                              
+   <p>                                                                                                                                                                                                      
+   The method in the paper, often referred to as <strong>Diffusion Classifier</strong>,                                                                                                                     
+   uses a pre-trained text-to-image diffusion model (e.g., Stable Diffusion) and turns                                                                                                                      
+   it into a zero-shot classifier through scoring.                                                                                                                                                          
+   </p>                                                                                                                                                                                                     
+   <ul>                                                                                                                                                                                                     
+   <li>Define class prompts (e.g., “a photo of a golden retriever”).</li>                                                                                                                                   
+   <li>Take an input image <em>x</em>.</li>                                                                                                                                                                 
+   <li>For each class prompt <em>c</em>, estimate a diffusion-based loss / energy indicating how compatible <em>x</em> is with <em>c</em>.</li>                                                             
+   <li>Convert per-class energies into probabilities (typically softmax over negative losses).</li>                                                                                                         
+   <li>Predict the class with the highest probability.</li>                                                                                                                                                 
+   </ul>                                                                                                                                                                                                    
+                                                                                                                                                                                                            
+   <div class="math-note">                                                                                                                                                                                  
+   Intuition: lower diffusion reconstruction/noise-prediction error under a class prompt means                                                                                                              
+   the model believes that prompt better explains the observed image.                                                                                                                                       
+   </div>                                                                                                                                                                                                   
+                                                                                                                                                                                                            
+   <p>                                                                                                                                                                                                      
+   In practice, reliable scoring requires averaging over multiple noise samples and timesteps.                                                                                                              
+   Prompt design also matters: prompt templates can significantly affect final accuracy.                                                                                                                    
+   </p>                                                                                                                                                                                                     
+                                                                                                                                                                                                            
+   <p class="large-text">4. Why This Is Different From CLIP-Style Zero-Shot</p>                                                                                                                             
+   <p>                                                                                                                                                                                                      
+   CLIP-like methods compare embeddings from image and text encoders in a shared space.                                                                                                                     
+   Diffusion Classifier instead uses a <em>generative compatibility score</em>. This can capture                                                                                                            
+   nuanced multimodal relationships and often helps with compositional concepts where plain                                                                                                                 
+   embedding similarity can be brittle.                                                                                                                                                                     
+   </p>                                                                                                                                                                                                     
+   <p>                                                                                                                                                                                                      
+   The trade-off is compute: diffusion-based inference is heavier than one-pass discriminative                                                                                                              
+   scoring, so latency and cost are key practical considerations.                                                                                                                                           
+   </p>                                                                                                                                                                                                     
+                                                                                                                                                                                                            
+   <p class="large-text">5. Main Findings Reported in the Paper</p>                                                                                                                                         
+   <ul>                                                                                                                                                                                                     
+   <li>Strong zero-shot classification performance using only pre-trained diffusion models.</li>                                                                                                            
+   <li>Outperforms alternative methods that extract classifiers from diffusion models in several benchmarks.</li>                                                                                           
+   <li>Still a gap vs best discriminative systems on some tasks.</li>                                                                                                                                       
+   <li>Notably stronger compositional reasoning in challenging multimodal settings.</li>                                                                                                                    
+   <li>Promising “effective robustness” trends under distribution shift.</li>                                                                                                                               
+   </ul>                                                                                                                                                                                                    
+                                                                                                                                                                                                            
+   <p class="large-text">6. Robustness and Distribution Shift</p>                                                                                                                                           
+   <p>                                                                                                                                                                                                      
+   One of the interesting claims is that generative scoring can remain useful when test data                                                                                                                
+   deviates from the training distribution. The paper reports improved effective robustness in                                                                                                              
+   some settings compared with extracted discriminative baselines.                                                                                                                                          
+   </p>                                                                                                                                                                                                     
+   <p>                                                                                                                                                                                                      
+   This should not be read as “diffusion always wins.” Instead, it suggests that generative                                                                                                                 
+   modeling provides a different bias that can be advantageous in certain shift regimes,                                                                                                                    
+   especially when semantics and composition matter.                                                                                                                                                        
+   </p>                                                                                                                                                                                                     
+                                                                                                                                                                                                            
+   <p class="large-text">7. Strengths</p>                                                                                                                                                                   
+   <ul>                                                                                                                                                                                                     
+   <li><strong>No additional task-specific training</strong> required for many zero-shot setups.</li>                                                                                                       
+   <li><strong>Better compositionality</strong> than several competing extraction methods.</li>                                                                                                             
+   <li><strong>Unified model usage</strong>: one backbone for generation and recognition.</li>                                                                                                              
+   <li><strong>Conceptual clarity</strong>: classify by explaining the data, not only matching embeddings.</li>                                                                                             
+   </ul>                                                                                                                                                                                                    
+                                                                                                                                                                                                            
+   <p class="large-text">8. Limitations and Practical Frictions</p>                                                                                                                                         
+   <ul>                                                                                                                                                                                                     
+   <li><strong>Inference cost</strong>: much heavier than standard discriminative classifiers.</li>                                                                                                         
+   <li><strong>Prompt sensitivity</strong>: wording and template choices can move results significantly.</li>                                                                                               
+   <li><strong>Calibration challenges</strong>: score scales and confidence interpretation need care.</li>                                                                                                  
+   <li><strong>Throughput constraints</strong>: difficult for strict real-time production pipelines without optimization.</li>                                                                              
+   </ul>                                                                                                                                                                                                    
+                                                                                                                                                                                                            
+   <p class="large-text">9. Practical Guidance</p>                                                                                                                                                          
+   <div class="takeaway">                                                                                                                                                                                   
+   <p><strong>Use this approach when:</strong></p>                                                                                                                                                          
+   <ul>                                                                                                                                                                                                     
+   <li>You need zero-shot recognition over changing class vocabularies.</li>                                                                                                                                
+   <li>Compositional reasoning is more important than raw low-latency throughput.</li>                                                                                                                      
+   <li>You want a unified generative framework for both synthesis and understanding.</li>                                                                                                                   
+   </ul>                                                                                                                                                                                                    
+   <p><strong>Be cautious when:</strong></p>                                                                                                                                                                
+   <ul>                                                                                                                                                                                                     
+   <li>Latency and inference budget are strict.</li>                                                                                                                                                        
+   <li>You need highly stable, prompt-insensitive deployment at scale.</li>                                                                                                                                 
+   </ul>                                                                                                                                                                                                    
+   </div>                                                                                                                                                                                                   
+                                                                                                                                                                                                            
+   <p class="large-text">10. Broader Perspective</p>                                                                                                                                                        
+   <p>                                                                                                                                                                                                      
+   This paper contributes to a bigger trend: generative models are not just content creators,                                                                                                               
+   they are increasingly becoming general-purpose world models. If a model can assign meaningful                                                                                                            
+   compatibility scores to image-text pairs, it can support downstream tasks beyond generation,                                                                                                             
+   including classification, retrieval, and eventually more structured reasoning.                                                                                                                           
+   </p>                                                                                                                                                                                                     
+                                                                                                                                                                                                            
+   <p class="large-text">Conclusion</p>                                                                                                                                                                     
+   <p>                                                                                                                                                                                                      
+   <em>Your Diffusion Model is Secretly a Zero-Shot Classifier</em> is an elegant demonstration                                                                                                             
+   that a pre-trained diffusion model already contains useful recognition capabilities.                                                                                                                     
+   The method is not a universal replacement for discriminative classifiers, but it offers a                                                                                                                
+   compelling alternative when compositionality and open-ended semantics are central.                                                                                                                       
+   For researchers and practitioners, the key message is simple:                                                                                                                                            
+   <strong>don’t underestimate what generative models already know.</strong>                                                                                                                                
+   </p>                                                                                                                                                                                                     
+                                                                                                                                                                                                            
+   <strong>Suggested Readings:</strong>                                                                                                                                                                     
+   <ul>                                                                                                                                                                                                     
+   <li><a href="https://arxiv.org/abs/2303.16203">Your Diffusion Model is Secretly a Zero-Shot Classifier (arXiv)</a></li>                                                                                  
+   <li><a href="https://diffusion-classifier.github.io/">Project Page: Diffusion Classifier</a></li>                                                                                                        
+   <li><a href="https://arxiv.org/abs/2103.00020">CLIP: Learning Transferable Visual Models From Natural Language Supervision</a></li>                                                                      
+   </ul>                                                                                                                                                                                                    
+                                                                                                                                                                                                            
+   <p><a href="blog.html">Back to Blog</a></p>                                                                                                                                                              
+   </section>                                                                                                                                                                                               
+                                                                                                                                                                                                            
+   <footer>                                                                                                                                                                                                 
+   <p>&copy; 2025 Berardino Barile | All rights reserved</p>                                                                                                                                                
+   </footer>                                                                                                                                                                                                
+   </body>                                                                                                                                                                                                  
+   </html> 
+ ``` 
